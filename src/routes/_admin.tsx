@@ -31,11 +31,14 @@ function AdminLayout() {
   const { user, logout } = useAuthStore()
   const navigate = useNavigate()
 
+  const { setUser } = useAuthStore()
   const { data: meData } = useQuery({
     queryKey: ['me'],
     queryFn: async () => {
       const res = await apiClient.get('/auth/me')
-      return res.data.data
+      const me = res.data.data
+      setUser(me)
+      return me
     },
     retry: false,
     enabled: !user,
