@@ -21,7 +21,9 @@ interface Permission {
   title: string
   module: string
   action: string
+  url: string | null
   order: number
+  parentId: number | null
 }
 
 const schema = z.object({
@@ -29,6 +31,7 @@ const schema = z.object({
   title: z.string().min(1, 'Bắt buộc').max(255),
   module: z.string().min(1, 'Bắt buộc').max(100),
   action: z.string().min(1, 'Bắt buộc').max(100),
+  url: z.string().max(500).optional(),
   order: z.coerce.number().int().default(0),
 })
 type FormValues = z.infer<typeof schema>
@@ -66,7 +69,10 @@ function PermissionsPage() {
 
   const handleOpen = (perm?: Permission) => {
     setEditing(perm ?? null)
-    form.reset(perm ? { name: perm.name, title: perm.title, module: perm.module, action: perm.action, order: perm.order } : { order: 0 })
+    form.reset(perm
+      ? { name: perm.name, title: perm.title, module: perm.module, action: perm.action, url: perm.url ?? '', order: perm.order }
+      : { order: 0, url: '' }
+    )
     setFormOpen(true)
   }
   const handleClose = () => { setFormOpen(false); setEditing(null) }
@@ -80,6 +86,7 @@ function PermissionsPage() {
     { accessorKey: 'title', header: 'Tên' },
     { accessorKey: 'module', header: 'Module', cell: ({ getValue }) => <span className="inline-flex px-2 py-0.5 bg-blue-50 text-blue-700 text-xs rounded-full">{getValue<string>()}</span> },
     { accessorKey: 'action', header: 'Action', cell: ({ getValue }) => <span className="inline-flex px-2 py-0.5 bg-purple-50 text-purple-700 text-xs rounded-full">{getValue<string>()}</span> },
+    { accessorKey: 'url', header: 'URL', cell: ({ getValue }) => getValue<string | null>() ? <code className="text-xs text-gray-500 font-mono">{getValue<string>()}</code> : <span className="text-gray-300 text-xs">—</span> },
     { accessorKey: 'order', header: 'Thứ tự' },
     {
       id: 'actions', header: '',
@@ -121,6 +128,10 @@ function PermissionsPage() {
             <label className="block text-sm font-medium text-gray-700 mb-1">Tên hiển thị <span className="text-red-500">*</span></label>
             <input {...form.register('title')} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Tạo người dùng" />
             {form.formState.errors.title && <p className="text-xs text-red-500 mt-1">{form.formState.errors.title.message}</p>}
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">URL <span className="text-gray-400 text-xs font-normal">(route mapping)</span></label>
+            <input {...form.register('url')} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="POST /api/v1/users" />
           </div>
           <div className="grid grid-cols-3 gap-3">
             <div>
