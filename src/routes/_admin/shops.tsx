@@ -110,7 +110,7 @@ function ShopsPage() {
     { accessorKey: 'title', header: 'Tên shop' },
     { accessorKey: 'domain', header: 'Domain', cell: ({ getValue }) => <span className="font-mono text-xs">{getValue<string>()}</span> },
     { accessorKey: 'group', header: 'Nhóm', cell: ({ getValue }) => getValue<ShopGroup>().title },
-    { accessorKey: 'status', header: 'Trạng thái', cell: ({ getValue }) => <StatusBadge active={getValue<string>() === 'active'} /> },
+    { accessorKey: 'status', header: 'Trạng thái', cell: ({ getValue }) => <StatusBadge active={getValue<string>() === 'ACTIVE'} /> },
     { accessorKey: 'createdAt', header: 'Ngày tạo', cell: ({ getValue }) => formatDate(getValue<string>()) },
     {
       id: 'actions', header: '',

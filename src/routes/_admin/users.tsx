@@ -37,7 +37,7 @@ const createSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   phone: z.string().optional(),
-  status: z.enum(['active', 'inactive']).default('active'),
+  status: z.enum(['ACTIVE', 'INACTIVE']).default('ACTIVE'),
 })
 type CreateFormValues = z.infer<typeof createSchema>
 
@@ -46,7 +46,7 @@ const updateSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   phone: z.string().optional(),
-  status: z.enum(['active', 'inactive']).optional(),
+  status: z.enum(['ACTIVE', 'INACTIVE']).optional(),
 })
 type UpdateFormValues = z.infer<typeof updateSchema>
 
@@ -123,7 +123,7 @@ function UsersPage() {
       </div>
     )},
     { accessorKey: 'balance', header: 'Số dư', cell: ({ getValue }) => <span className="font-medium text-green-700">{formatCurrency(Number(getValue<string>()))}</span> },
-    { accessorKey: 'status', header: 'Trạng thái', cell: ({ getValue }) => <StatusBadge active={getValue<string>() === 'active'} /> },
+    { accessorKey: 'status', header: 'Trạng thái', cell: ({ getValue }) => <StatusBadge active={getValue<string>() === 'ACTIVE'} /> },
     { accessorKey: 'lastLoginAt', header: 'Đăng nhập lần cuối', cell: ({ getValue }) => getValue<string | null>() ? formatDate(getValue<string>()) : <span className="text-gray-400 text-xs">Chưa</span> },
     { accessorKey: 'createdAt', header: 'Ngày tạo', cell: ({ getValue }) => formatDate(getValue<string>()) },
     {
@@ -176,8 +176,8 @@ function UsersPage() {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Trạng thái</label>
               <select {...createForm.register('status')} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="active">Hoạt động</option>
-                <option value="inactive">Tạm khóa</option>
+                <option value="ACTIVE">Hoạt động</option>
+                <option value="INACTIVE">Tạm khóa</option>
               </select>
             </div>
             <div>
